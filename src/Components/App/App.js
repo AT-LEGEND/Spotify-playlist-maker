@@ -18,6 +18,16 @@ class App extends React.Component {
 		this.savePlaylist = this.savePlaylist.bind(this);
 		this.search = this.search.bind(this);
 	}
+	compare(a, b) {
+		if (a.name < b.name) {
+			return -1;
+		}
+		if (a.name > b.name) {
+			return 1;
+		}
+		return 0;
+	}
+
 	addTrack(track) {
 		let tracks = this.state.playlistTracks;
 		if (tracks.find((savedTrack) => savedTrack.id === track.id)) {
@@ -25,11 +35,22 @@ class App extends React.Component {
 		}
 		tracks.push(track);
 		this.setState({ playlistTracks: tracks });
+		let results = this.state.searchResults;
+		results = results.filter((currentTrack) => currentTrack.id !== track.id);
+		this.setState({ searchResults: results });
 	}
 	removeTrack(track) {
 		let tracks = this.state.playlistTracks;
 		tracks = tracks.filter((currentTrack) => currentTrack.id !== track.id);
 		this.setState({ playlistTracks: tracks });
+
+		let results = this.state.searchResults;
+		if (results.find((savedTrack) => savedTrack.id === track.id)) {
+			return;
+		}
+		results.unshift(track);
+		results.sort(this.compare);
+		this.setState({ searchResults: results });
 	}
 	updatePlaylistName(name) {
 		this.setState({

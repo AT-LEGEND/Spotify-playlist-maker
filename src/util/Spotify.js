@@ -1,7 +1,16 @@
 let accessToken = "";
 let clientID = "4377783abe9548079777b70c980d605e";
-const redirectUri = "http://dirty-attention.surge.sh";
+const redirectUri = "http://localhost:3000";
 const Spotify = {
+	compare(a, b) {
+		if (a.name < b.name) {
+			return -1;
+		}
+		if (a.name > b.name) {
+			return 1;
+		}
+		return 0;
+	},
 	getAccessToken() {
 		if (accessToken) {
 			return accessToken;
@@ -22,8 +31,6 @@ const Spotify = {
 	},
 	search(term) {
 		const accessToken = Spotify.getAccessToken();
-
-		console.log(term);
 		return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
@@ -33,7 +40,6 @@ const Spotify = {
 				return response.json();
 			})
 			.then((jsonResponse) => {
-				console.log(jsonResponse);
 				if (!jsonResponse.tracks) {
 					return [];
 				} else {
@@ -45,7 +51,8 @@ const Spotify = {
 						uri: track.uri,
 						preview: track.preview_url,
 					}));
-					return tracks;
+
+					return tracks.sort(Spotify.compare);
 				}
 			});
 	},
