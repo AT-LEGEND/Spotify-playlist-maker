@@ -1,6 +1,6 @@
 let accessToken = "";
 let clientID = "4377783abe9548079777b70c980d605e";
-const redirectUri = "http://localhost:3000/";
+const redirectUri = "http://dirty-attention.surge.sh";
 const Spotify = {
 	getAccessToken() {
 		if (accessToken) {
